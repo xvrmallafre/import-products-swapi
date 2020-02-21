@@ -22,7 +22,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Xvrmallafre\\ImportProductsSwapi\\ServiceProvider"
+                "Xvrmallafre\\ImportProductsSwapi\\SwapiServiceProvider"
             ]
         }
     }

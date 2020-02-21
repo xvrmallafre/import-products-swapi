@@ -4,7 +4,7 @@ namespace Xvrmallafre\ImportProductsSwapi;
 
 use Illuminate\Support\ServiceProvider;
 
-class ServiceProvider extends ServiceProvider
+class SwapiServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
