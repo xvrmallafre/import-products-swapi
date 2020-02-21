@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Xvrmallafre\ImportProductsSwapi;
 
 use Illuminate\Support\ServiceProvider;
 
