@@ -4,7 +4,7 @@ namespace Xvrmallafre\ImportProductsSwapi\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Starships extends Model
+class Starship extends Model
 {
     public $timestamps = true;
 

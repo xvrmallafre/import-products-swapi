@@ -3,7 +3,7 @@
 namespace Xvrmallafre\ImportProductsSwapi;
 
 use Illuminate\Support\ServiceProvider;
-use Xvrmallafre\ImportProductsSwapi\Console\Commands\GetStarships;
+use Xvrmallafre\ImportProductsSwapi\Console\Commands\ImportFromSwapi;
 
 class SwapiServiceProvider extends ServiceProvider
 {
@@ -18,7 +18,7 @@ class SwapiServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                GetStarships::class,
+                ImportFromSwapi::class,
             ]);
         }
     }

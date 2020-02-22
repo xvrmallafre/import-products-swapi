@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStarshipPilotTable extends Migration
+class CreatePilotStarshipTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateStarshipPilotTable extends Migration
      */
     public function up()
     {
-        Schema::create('starship_pilot', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('starship_id');
-            $table->integer('pilot_id');
+        Schema::create('pilot_starship', function (Blueprint $table) {
+            $table->bigInteger('pilot_id')->unsigned();
+            $table->foreign('pilot_id')->references('id')->on('pilots');
+            $table->bigInteger('starship_id')->unsigned();
+            $table->foreign('starship_id')->references('id')->on('starships');
         });
     }
 

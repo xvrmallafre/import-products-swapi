@@ -4,19 +4,20 @@ namespace Xvrmallafre\ImportProductsSwapi\Console\Commands;
 
 use Illuminate\Console\Command;
 use SWAPI\SWAPI;
+use Xvrmallafre\ImportProductsSwapi\Models\Starship;
 
 /**
  * Class GetStarships
  * @package Xvrmallafre\ImportProductsSwapi\Console\Commands
  */
-class GetStarships extends Command
+class ImportFromSwapi extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'swapi:getstarships';
+    protected $signature = 'swapi:import';
 
     /**
      * The console command description.
@@ -49,6 +50,8 @@ class GetStarships extends Command
      */
     public function handle()
     {
+        $pilots = [];
+
         do {
             if (!isset($starships)) {
                 $starships = $this->swapi->starships()->index();
@@ -57,7 +60,19 @@ class GetStarships extends Command
             }
 
             foreach ($starships as $starship) {
-                echo "{$starship->name}\n";
+                Starship::updateOrCreate(
+                    [
+                        'url' => $starship->url
+                    ],
+                    [
+                        'name' => $starship->name,
+                        'model' => $starship->model,
+                        'manufacturer' => $starship->manufacturer,
+                        'starship_class' => $starship->starship_class,
+                        'cost_in_credits' => $starship->cost_in_credits,
+                    ]
+                );
+                
             }
         } while ($starships->hasNext());
     }
