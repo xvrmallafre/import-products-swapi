@@ -14,12 +14,13 @@ class CreateStarshipsTable extends Migration
     public function up()
     {
         Schema::create('starships', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name', 120);
             $table->string('model', 120);
             $table->string('manufacturer', 255);
             $table->string('starship_class', 120);
             $table->string('cost_in_credits', 120);
+            $table->string('url', 255)->unique();
             $table->timestamps();
         });
     }

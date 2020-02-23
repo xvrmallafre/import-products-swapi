@@ -3,6 +3,7 @@
 namespace Xvrmallafre\ImportProductsSwapi;
 
 use Illuminate\Support\ServiceProvider;
+use Xvrmallafre\ImportProductsSwapi\Console\Commands\ImportFromSwapi;
 
 class SwapiServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,11 @@ class SwapiServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
-        //TODO: declare commands
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ImportFromSwapi::class,
+            ]);
+        }
     }
 }
