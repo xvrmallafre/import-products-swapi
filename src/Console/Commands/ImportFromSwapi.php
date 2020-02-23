@@ -5,6 +5,7 @@ namespace Xvrmallafre\ImportProductsSwapi\Console\Commands;
 use Illuminate\Console\Command;
 use SWAPI\SWAPI;
 use Xvrmallafre\ImportProductsSwapi\Models\Starship;
+use Xvrmallafre\ImportProductsSwapi\Models\Pilot;
 
 /**
  * Class GetStarships
@@ -50,8 +51,6 @@ class ImportFromSwapi extends Command
      */
     public function handle()
     {
-        $pilots = [];
-
         do {
             if (!isset($starships)) {
                 $starships = $this->swapi->starships()->index();
@@ -60,20 +59,73 @@ class ImportFromSwapi extends Command
             }
 
             foreach ($starships as $starship) {
-                Starship::updateOrCreate(
-                    [
-                        'url' => $starship->url
-                    ],
-                    [
-                        'name' => $starship->name,
-                        'model' => $starship->model,
-                        'manufacturer' => $starship->manufacturer,
-                        'starship_class' => $starship->starship_class,
-                        'cost_in_credits' => $starship->cost_in_credits,
-                    ]
-                );
-                
+                $newStarship = $this->saveEntityFromArray('starship', $starship);
+
+                if (!empty($starship->pilots)) {
+                    foreach ($starship->pilots as $pilotUrl) {
+                        $pilot = $this->swapi->characters()->get($this->getEntityIdFromUrl('pilot', $pilotUrl->url));
+                        $newPilot = $this->saveEntityFromArray('pilot', $pilot);
+                        $newStarship->pilots()->attach($newPilot->id);
+                    }
+                }
             }
         } while ($starships->hasNext());
+    }
+
+    protected function saveEntityFromArray(string $entityType, object $entityData)
+    {
+        if (empty($entityType) || empty($entityData)) {
+            return;
+        }
+
+        $filter = ['url' => $entityData->url];
+
+        switch ($entityType) {
+            case 'starship':
+                $entity = Starship::updateOrCreate(
+                    $filter,
+                    [
+                        'name' => $entityData->name,
+                        'model' => $entityData->model,
+                        'manufacturer' => $entityData->manufacturer,
+                        'starship_class' => $entityData->starship_class,
+                        'cost_in_credits' => $entityData->cost_in_credits,
+                        'url' => $entityData->url,
+                    ]
+                );
+                break;
+            case 'pilot':
+                $entity = Pilot::updateOrCreate(
+                    $filter,
+                    [
+                        'name' => $entityData->name,
+                        'gender' => $entityData->gender,
+                        'url' => $entityData->url,
+                    ]
+                );
+                break;
+        }
+
+        return $entity;
+    }
+
+    protected function getEntityIdFromUrl(string $entityType, string $url)
+    {
+        $baseUrl = 'https://swapi.co/api/';
+        $entityUrl = '';
+
+        switch ($entityType) {
+            case 'starship':
+                $entityUrl = $baseUrl . 'starship/';
+                break;
+            case 'pilot':
+                $entityUrl = $baseUrl . 'people/';
+                break;
+        }
+
+        $swapiId = str_replace($entityUrl, '', $url);
+        $swapiId = str_replace('/', '', $swapiId);
+
+        return (int)$swapiId;
     }
 }

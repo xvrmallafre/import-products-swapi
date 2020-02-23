@@ -13,7 +13,8 @@ class Starship extends Model
         'model',
         'manufacturer',
         'starship_class',
-        'cost_in_credits'
+        'cost_in_credits',
+        'url',
     ];
 
     public function pilots()

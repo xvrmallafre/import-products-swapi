@@ -10,7 +10,8 @@ class Pilot extends Model
 
     protected $fillable = [
         'name',
-        'gender'
+        'gender',
+        'url',
     ];
 
     public function starships()
