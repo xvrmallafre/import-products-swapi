@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use SWAPI\SWAPI;
 use Xvrmallafre\ImportProductsSwapi\Models\Starship;
 use Xvrmallafre\ImportProductsSwapi\Models\Pilot;
+use Xvrmallafre\ImportProductsSwapi\Traits\EntityTrait;
 
 /**
  * Class GetStarships
@@ -13,6 +14,8 @@ use Xvrmallafre\ImportProductsSwapi\Models\Pilot;
  */
 class ImportFromSwapi extends Command
 {
+    use EntityTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -72,6 +75,10 @@ class ImportFromSwapi extends Command
         } while ($starships->hasNext());
     }
 
+    /**
+     * @param string $entityType
+     * @param object $entityData
+     */
     protected function saveEntityFromArray(string $entityType, object $entityData)
     {
         if (empty($entityType) || empty($entityData)) {
@@ -107,25 +114,5 @@ class ImportFromSwapi extends Command
         }
 
         return $entity;
-    }
-
-    protected function getEntityIdFromUrl(string $entityType, string $url)
-    {
-        $baseUrl = 'https://swapi.co/api/';
-        $entityUrl = '';
-
-        switch ($entityType) {
-            case 'starship':
-                $entityUrl = $baseUrl . 'starship/';
-                break;
-            case 'pilot':
-                $entityUrl = $baseUrl . 'people/';
-                break;
-        }
-
-        $swapiId = str_replace($entityUrl, '', $url);
-        $swapiId = str_replace('/', '', $swapiId);
-
-        return (int)$swapiId;
     }
 }
