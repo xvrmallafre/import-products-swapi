@@ -4,6 +4,7 @@ namespace Xvrmallafre\ImportProductsSwapi;
 
 use Illuminate\Support\ServiceProvider;
 use Xvrmallafre\ImportProductsSwapi\Console\Commands\ImportFromSwapi;
+use Xvrmallafre\ImportProductsSwapi\Console\Commands\ExportToMagento;
 
 class SwapiServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,7 @@ class SwapiServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 ImportFromSwapi::class,
+                ExportToMagento::class,
             ]);
         }
     }
